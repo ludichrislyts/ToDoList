@@ -27,6 +27,11 @@ class Task
     {
         return $_SESSION['list_of_tasks'];
     }
+
+    static function deleteAll()
+    {
+        $_SESSION['list_of_tasks'] = array();
+    }
 }
 
 ?>
