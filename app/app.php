@@ -2,21 +2,31 @@
     require_once __DIR__."/../vendor/autoload.php";
     require_once __DIR__."/../src/Task.php";
 
+    session_start();
+    if (empty($_SESSION['list_of_tasks']))
+    {
+        $_SESSION['list_of_tasks'] = array();
+    }
+
     $app = new Silex\Application();
 
     $app->get("/", function()
     {
-        $test_task = new Task("Learn PHP.");
-        $test_task2 = new Task("Learn Drupal.");
-        $test_task3 = new Task("Visit France.");
-
-        $list_of_tasks = array($test_task, $test_task2, $test_task3);
         $output = "";
 
-        foreach ($list_of_tasks as $task)
+        foreach (Task::getAll() as $task)
         {
             $output = $output . "<p>" . $task->getDescription() . "</p>";
         }
+
+        $output = $output . "</ul>
+            <form action='/tasks' method='post'>
+                <label for='description'>Task Description</label>
+                <input id='description' name='description' type='text'>
+
+                <button type='submit'>Add task</button>
+            </form>
+        ";
 
         return $output;
     });
